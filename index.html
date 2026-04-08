@@ -758,6 +758,14 @@ function selectSkill(qId, val) {
 function nextQuestion() { if (current < TOTAL-1) { current++; renderQuestion(); } }
 function prevQuestion() { if (current > 0) { current--; renderQuestion(); } }
 
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter') return;
+  const testArea = document.getElementById('test-area');
+  if (!testArea || testArea.style.display === 'none') return;
+  const btn = document.getElementById('btn-next');
+  if (btn && !btn.disabled) btn.click();
+});
+
 // ============================================================
 // RESULTS
 // ============================================================
