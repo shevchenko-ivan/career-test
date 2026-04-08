@@ -155,7 +155,7 @@
   .result-section > p { color: var(--text-light); font-size: 0.9em; margin-bottom: 16px; line-height: 1.6; }
 
   /* RIASEC CHART */
-  .riasec-chart { display: flex; justify-content: center; align-items: flex-end; gap: 12px; height: 200px; padding: 20px 0; margin-bottom: 16px; }
+  .riasec-chart { display: flex; justify-content: center; align-items: flex-end; gap: 12px; height: 240px; padding: 20px 0; margin-bottom: 16px; }
   .riasec-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; max-width: 80px; }
   .riasec-bar { width: 100%; border-radius: 10px 10px 4px 4px; transition: height 0.8s ease; position: relative; min-height: 8px; }
   .riasec-bar .bar-value { position: absolute; top: -24px; left: 50%; transform: translateX(-50%); font-size: 0.82em; font-weight: 700; }
@@ -272,7 +272,7 @@
     .check-grid { grid-template-columns: 1fr; }
     .result-section { padding: 20px 16px; }
     .bar-label { width: 110px; font-size: 0.82em; }
-    .riasec-chart { height: 160px; gap: 6px; }
+    .riasec-chart { height: 240px; gap: 6px; }
     .likert-btn { font-size: 0.75em; padding: 10px 4px; }
   }
 
@@ -818,7 +818,7 @@ function showResults() {
       <div class="riasec-chart">
         ${sortedRiasec.map(([type, score]) => {
           const pct = Math.round((score / maxBar) * 100);
-          const height = Math.max(12, (score / maxBar) * 170);
+          const height = Math.max(12, (score / maxBar) * 150);
           return `<div class="riasec-bar-wrap">
             <div class="riasec-bar" style="height:${height}px;background:${riasecTypes[type].color};">
               <span class="bar-value" style="color:${riasecTypes[type].color}">${pct}%</span>

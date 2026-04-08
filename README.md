@@ -14,7 +14,6 @@
 
 Відкрий `index.html` у будь-якому браузері. Або переходь на GitHub Pages:
 
-**https://shevchenkoivan1951.github.io/career-test/**
 
 ## Технології
 
