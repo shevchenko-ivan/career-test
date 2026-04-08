@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Знайди свій шлях — Тест профорієнтації</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --primary: #6C5CE7;
+    --primary-light: #A29BFE;
+    --primary-bg: #F0EDFF;
+    --accent: #FF6B9D;
+    --accent-light: #FFD3E2;
+    --success: #00B894;
+    --warning: #FDCB6E;
+    --text: #2D3436;
+    --text-light: #636E72;
+    --bg: #FAFAFA;
+    --card: #FFFFFF;
+    --border: #E8E8E8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 20px; }
+
+  /* INTRO */
+  .intro { text-align: center; padding: 50px 20px; animation: fadeIn 0.6s ease; }
+  .intro-emoji { font-size: 64px; margin-bottom: 20px; }
+  .intro h1 {
+    font-size: 2.2em; font-weight: 800;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 16px;
+  }
+  .intro p { font-size: 1.05em; color: var(--text-light); max-width: 560px; margin: 0 auto 12px; }
+  .intro .method-note {
+    font-size: 0.85em; color: var(--text-light); background: var(--primary-bg);
+    padding: 14px 20px; border-radius: 12px; max-width: 520px; margin: 24px auto 10px; line-height: 1.5;
+  }
+  .intro .tip {
+    font-size: 0.88em; color: var(--accent); max-width: 480px; margin: 12px auto 28px;
+    font-weight: 500;
+  }
+  .btn-start {
+    display: inline-block; background: linear-gradient(135deg, var(--primary), #8B7CF7);
+    color: white; border: none; padding: 16px 48px; font-size: 1.15em; font-weight: 600;
+    border-radius: 50px; cursor: pointer; transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(108,92,231,0.35);
+  }
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(108,92,231,0.45); }
+
+  /* PROGRESS */
+  .progress-container {
+    position: sticky; top: 0; background: rgba(250,250,250,0.95); backdrop-filter: blur(10px);
+    padding: 16px 0 12px; z-index: 100; border-bottom: 1px solid var(--border);
+  }
+  .progress-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .progress-section { font-size: 0.85em; font-weight: 600; color: var(--primary); }
+  .progress-count { font-size: 0.82em; color: var(--text-light); }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 3px; transition: width 0.4s ease; }
+
+  /* QUESTION CARD */
+  .question-screen { display: none; }
+  .question-screen.active { display: block; animation: slideIn 0.3s ease; }
+  .question-card {
+    background: var(--card); border-radius: 20px; padding: 32px 28px; margin: 20px 0;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  }
+  .question-number { font-size: 0.78em; font-weight: 600; color: var(--primary-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+  .question-text { font-size: 1.15em; font-weight: 600; margin-bottom: 6px; line-height: 1.5; }
+  .question-context { font-size: 0.88em; color: var(--text-light); margin-bottom: 22px; line-height: 1.5; }
+
+  /* CHOICE PAIR (A or B) */
+  .choice-pair { display: flex; flex-direction: column; gap: 10px; }
+  .choice-btn {
+    display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px;
+    border: 2px solid var(--border); border-radius: 16px; background: white;
+    cursor: pointer; transition: all 0.2s; text-align: left; font-size: 0.95em;
+    line-height: 1.5; color: var(--text);
+  }
+  .choice-btn:hover { border-color: var(--primary-light); background: var(--primary-bg); }
+  .choice-btn.selected { border-color: var(--primary); background: var(--primary-bg); }
+  .choice-btn .choice-letter {
+    flex-shrink: 0; width: 32px; height: 32px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.85em; background: var(--border); color: var(--text-light);
+    transition: all 0.2s;
+  }
+  .choice-btn.selected .choice-letter { background: var(--primary); color: white; }
+  .choice-btn .choice-text { flex: 1; padding-top: 4px; }
+
+  /* LIKERT (for skills) */
+  .likert-wrap { margin-bottom: 8px; }
+  .likert-options { display: flex; gap: 6px; justify-content: center; margin-bottom: 8px; }
+  .likert-btn {
+    flex: 1; max-width: 120px; padding: 12px 8px; border-radius: 14px;
+    border: 2px solid var(--border); background: white; font-size: 0.82em;
+    font-weight: 500; color: var(--text-light); cursor: pointer; transition: all 0.2s;
+    text-align: center; line-height: 1.3;
+  }
+  .likert-btn:hover { border-color: var(--primary-light); background: var(--primary-bg); }
+  .likert-btn.selected { border-color: var(--primary); background: var(--primary); color: white; }
+
+  /* MULTI-CHECK (for flow section) */
+  .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .check-item {
+    display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+    border: 2px solid var(--border); border-radius: 14px; background: white;
+    cursor: pointer; transition: all 0.2s; font-size: 0.88em; line-height: 1.4;
+  }
+  .check-item:hover { border-color: var(--primary-light); }
+  .check-item.checked { border-color: var(--primary); background: var(--primary-bg); }
+  .check-box {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 6px;
+    border: 2px solid var(--border); display: flex; align-items: center;
+    justify-content: center; transition: all 0.2s; font-size: 0.75em;
+  }
+  .check-item.checked .check-box { background: var(--primary); border-color: var(--primary); color: white; }
+
+  /* NAV */
+  .nav-buttons { display: flex; justify-content: space-between; margin-top: 16px; gap: 12px; }
+  .btn-nav { padding: 12px 28px; border-radius: 50px; font-size: 0.95em; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+  .btn-prev { background: var(--primary-bg); color: var(--primary); }
+  .btn-prev:hover { background: #E0DBFF; }
+  .btn-next { background: var(--primary); color: white; margin-left: auto; }
+  .btn-next:hover { background: #5B4BD5; }
+  .btn-next:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-finish { background: linear-gradient(135deg, var(--success), #00D2A0); color: white; padding: 14px 36px; font-size: 1.05em; margin-left: auto; }
+  .btn-finish:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,184,148,0.35); }
+
+  /* RESULTS */
+  .results { display: none; animation: fadeIn 0.6s ease; }
+  .results-header { text-align: center; padding: 40px 0 20px; }
+  .results-header h2 { font-size: 1.9em; font-weight: 800; margin-bottom: 8px; }
+  .results-header p { color: var(--text-light); font-size: 1em; }
+
+  .result-section {
+    background: var(--card); border-radius: 20px; padding: 28px; margin-bottom: 20px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  }
+  .result-section h3 { font-size: 1.15em; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .result-section h3 span { font-size: 1.4em; }
+  .result-section > p { color: var(--text-light); font-size: 0.9em; margin-bottom: 16px; line-height: 1.6; }
+
+  /* RIASEC CHART */
+  .riasec-chart { display: flex; justify-content: center; align-items: flex-end; gap: 12px; height: 240px; padding: 20px 0; margin-bottom: 16px; }
+  .riasec-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; max-width: 80px; }
+  .riasec-bar { width: 100%; border-radius: 10px 10px 4px 4px; transition: height 0.8s ease; position: relative; min-height: 8px; }
+  .riasec-bar .bar-value { position: absolute; top: -24px; left: 50%; transform: translateX(-50%); font-size: 0.82em; font-weight: 700; }
+  .riasec-label { font-size: 0.72em; font-weight: 600; text-align: center; line-height: 1.3; color: var(--text-light); }
+  .riasec-label strong { display: block; font-size: 1.15em; color: var(--text); }
+
+  /* TYPE CARDS */
+  .type-card { border-radius: 16px; padding: 20px; margin-bottom: 14px; border-left: 4px solid var(--primary); }
+  .type-card h4 { font-size: 1.05em; font-weight: 700; margin-bottom: 8px; }
+  .type-card p { font-size: 0.9em; color: var(--text-light); line-height: 1.6; margin-bottom: 6px; }
+  .type-card .careers-inline { font-size: 0.85em; color: var(--text); margin-top: 8px; }
+  .type-card .careers-inline strong { color: var(--primary); }
+  .type-card.top-1 { border-left-color: #E84393; background: linear-gradient(135deg, #FFD3E2, #FFF); }
+  .type-card.top-2 { border-left-color: var(--primary); background: linear-gradient(135deg, var(--primary-bg), #FFF); }
+  .type-card.top-3 { border-left-color: var(--success); background: linear-gradient(135deg, #D4F5ED, #FFF); }
+
+  /* VALUE & SKILL BARS */
+  .bar-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #F0F0F0; }
+  .bar-item:last-child { border-bottom: none; }
+  .bar-label { width: 140px; font-size: 0.88em; font-weight: 600; flex-shrink: 0; }
+  .bar-bg { flex: 1; height: 10px; background: #ECECEC; border-radius: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 5px; transition: width 0.8s ease; }
+  .bar-pct { width: 40px; font-size: 0.82em; font-weight: 600; color: var(--text-light); text-align: right; flex-shrink: 0; }
+
+  /* CAREER FIELDS */
+  .career-field { margin-bottom: 16px; padding: 18px; background: #F8F9FA; border-radius: 14px; }
+  .career-field h4 { font-size: 1em; font-weight: 700; margin-bottom: 10px; color: var(--primary); }
+  .career-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .career-tag {
+    display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 0.82em;
+    font-weight: 500; background: white; border: 1px solid var(--border); color: var(--text);
+    cursor: pointer; transition: all 0.2s; position: relative;
+  }
+  .career-tag:hover { border-color: var(--primary); background: var(--primary-bg); transform: translateY(-1px); }
+  .career-tag::after { content: ' ℹ️'; font-size: 0.8em; }
+
+  /* CAREER POPUP */
+  .career-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.45);
+    z-index: 1000; display: flex; align-items: center; justify-content: center;
+    padding: 20px; animation: fadeIn 0.2s ease;
+  }
+  .career-popup {
+    background: white; border-radius: 20px; padding: 28px; max-width: 480px; width: 100%;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.18); animation: slideIn 0.25s ease;
+    max-height: 85vh; overflow-y: auto;
+  }
+  .career-popup-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+  .career-popup h4 { font-size: 1.15em; font-weight: 700; color: var(--text); line-height: 1.3; }
+  .career-popup-close {
+    flex-shrink: 0; width: 32px; height: 32px; border-radius: 10px; border: none;
+    background: var(--border); color: var(--text-light); font-size: 1.1em; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+  }
+  .career-popup-close:hover { background: #ddd; }
+  .career-popup-desc { font-size: 0.92em; line-height: 1.7; color: var(--text); margin-bottom: 14px; }
+  .career-popup-meta { font-size: 0.82em; color: var(--text-light); line-height: 1.6; }
+  .career-popup-meta div { padding: 6px 0; border-bottom: 1px solid #F0F0F0; }
+  .career-popup-meta div:last-child { border-bottom: none; }
+  .career-popup-meta strong { color: var(--text); }
+  .career-popup-search {
+    display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; margin-top: 14px;
+    border-radius: 12px; font-size: 0.82em; font-weight: 600; text-decoration: none;
+    background: var(--primary); color: white; transition: all 0.2s;
+  }
+  .career-popup-search:hover { background: #5B4BD5; }
+
+  /* RECS */
+  .rec-item { padding: 14px 18px; background: #F0FFF9; border-radius: 12px; margin-bottom: 10px; font-size: 0.92em; line-height: 1.6; border-left: 3px solid var(--success); }
+  .rec-item strong { color: var(--success); }
+
+  /* DISCUSSION */
+  .discussion-card { padding: 16px 20px; background: #FFF9F0; border-radius: 12px; margin-bottom: 10px; font-size: 0.92em; line-height: 1.6; border-left: 3px solid var(--warning); }
+
+  /* DISCLAIMER */
+  .disclaimer { text-align: center; padding: 24px; font-size: 0.8em; color: var(--text-light); line-height: 1.6; background: #F8F9FA; border-radius: 16px; margin: 20px 0 40px; }
+
+  /* UNI SEARCH */
+  .uni-section { background: linear-gradient(135deg, #667eea22, #764ba222); border: 2px solid #667eea44; }
+  .uni-country { margin-bottom: 20px; padding: 18px; background: white; border-radius: 14px; }
+  .uni-country h4 { font-size: 1em; font-weight: 700; margin-bottom: 4px; }
+  .uni-country .uni-info { font-size: 0.85em; color: var(--text-light); line-height: 1.5; margin-bottom: 12px; }
+  .uni-country .uni-free { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.75em; font-weight: 600; background: #D4F5ED; color: #00B894; margin-bottom: 8px; }
+  .uni-links { display: flex; flex-wrap: wrap; gap: 8px; }
+  .uni-link {
+    display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
+    border-radius: 12px; font-size: 0.82em; font-weight: 600; text-decoration: none;
+    background: var(--primary); color: white; transition: all 0.2s;
+  }
+  .uni-link:hover { background: #5B4BD5; transform: translateY(-1px); }
+  .uni-link.secondary { background: var(--primary-bg); color: var(--primary); }
+  .uni-link.secondary:hover { background: #E0DBFF; }
+  .uni-search-based { margin-top: 16px; padding: 16px; background: #FFF9F0; border-radius: 14px; border: 1px dashed var(--warning); }
+  .uni-search-based h4 { font-size: 0.95em; margin-bottom: 10px; color: var(--text); }
+  .uni-search-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .uni-search-tag {
+    display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px;
+    border-radius: 20px; font-size: 0.8em; font-weight: 500; text-decoration: none;
+    background: white; border: 1px solid var(--warning); color: var(--text); transition: all 0.2s;
+  }
+  .uni-search-tag:hover { background: var(--warning); color: #333; }
+
+  .results-actions { text-align: center; margin: 30px 0; }
+  .btn-print { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: var(--primary); color: white; border: none; border-radius: 50px; font-size: 0.95em; font-weight: 600; cursor: pointer; margin: 20px auto; }
+  .btn-restart { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: var(--primary-bg); color: var(--primary); border: none; border-radius: 50px; font-size: 0.95em; font-weight: 600; cursor: pointer; margin: 20px 8px; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 600px) {
+    .container { padding: 12px; }
+    .intro h1 { font-size: 1.6em; }
+    .question-card { padding: 24px 16px; }
+    .check-grid { grid-template-columns: 1fr; }
+    .result-section { padding: 20px 16px; }
+    .bar-label { width: 110px; font-size: 0.82em; }
+    .riasec-chart { height: 240px; gap: 6px; }
+    .likert-btn { font-size: 0.75em; padding: 10px 4px; }
+  }
+
+  @media print {
+    .progress-container, .nav-buttons, .results-actions, .btn-print, .btn-restart { display: none !important; }
+    .result-section { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+    body { background: white; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- INTRO -->
+  <div class="intro" id="intro">
+    <div class="intro-emoji">🧭</div>
+    <h1>Знайди свій шлях</h1>
+    <p>Цей тест допоможе зрозуміти, що тобі подобається, що для тебе важливо і в чому ти сильна — щоб знайти напрямок, який буде тобі до душі.</p>
+    <p>Тут немає правильних чи неправильних відповідей. Обирай те, що відчуваєш — навіть якщо вагаєшся, обери те, що хоч трішки ближче.</p>
+    <div class="method-note">
+      <strong>На чому базується:</strong> модель RIASEC Джона Голланда (використовується консультантами з профорієнтації по всьому світу вже 70+ років), доповнена аналізом цінностей та сильних сторін. Питання сформульовані як конкретні ситуації — так результати будуть точніші.
+    </div>
+    <div class="tip">Порада: не думай надто довго над кожним питанням — перша реакція зазвичай найточніша.</div>
+    <button class="btn-start" onclick="startTest()">Почати</button>
+  </div>
+
+  <!-- TEST -->
+  <div id="test-area" style="display:none;">
+    <div class="progress-container">
+      <div class="progress-info">
+        <span class="progress-section" id="section-name"></span>
+        <span class="progress-count" id="progress-text"></span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div id="questions-container"></div>
+    <div class="nav-buttons">
+      <button class="btn-nav btn-prev" id="btn-prev" onclick="prevQuestion()" style="display:none;">← Назад</button>
+      <button class="btn-nav btn-next" id="btn-next" onclick="nextQuestion()" disabled>Далі →</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="results"></div>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+// --- Section 1: Forced-choice pairs (RIASEC) ---
+// Each pair contrasts two types. 15 pairs = all C(6,2) combinations.
+// Questions framed as concrete teen-relatable scenarios.
+const pairQuestions = [
+  { id:'p1', types:['R','I'], context:'Уяви: тобі подарували набір для експериментів і набір інструментів.',
+    a: { text: 'Збираєш і ремонтуєш щось своїми руками — полицю, скриньку, або прикрасу', type:'R' },
+    b: { text: 'Проводиш експеримент або розбираєшся, як щось влаштовано всередині', type:'I' }
+  },
+  { id:'p2', types:['R','A'], context:'На вихідних у тебе вільний день.',
+    a: { text: 'Готуєш щось нове за рецептом, займаєшся спортом або майструєш', type:'R' },
+    b: { text: 'Малюєш, знімаєш відео, пишеш текст або створюєш щось креативне', type:'A' }
+  },
+  { id:'p3', types:['R','S'], context:'У школі треба обрати волонтерський проєкт.',
+    a: { text: 'Допомагаєш облаштувати простір — пофарбувати стіни, посадити рослини, зібрати меблі', type:'R' },
+    b: { text: 'Організовуєш допомогу молодшим учням — пояснюєш, підтримуєш, проводиш заняття', type:'S' }
+  },
+  { id:'p4', types:['R','E'], context:'Ти з друзями робиш стенд на шкільний ярмарок.',
+    a: { text: 'Берешся за технічну частину — конструюєш, оформлюєш, робиш руками', type:'R' },
+    b: { text: 'Берешся за організацію — розподіляєш задачі, вигадуєш як продати, ведеш переговори', type:'E' }
+  },
+  { id:'p5', types:['R','C'], context:'Тобі запропонували підробіток на літо.',
+    a: { text: 'Робота руками — допомагати в пекарні, майстерні або на фермі', type:'R' },
+    b: { text: 'Робота з документами — сортувати, вносити дані, вести облік', type:'C' }
+  },
+  { id:'p6', types:['I','A'], context:'Ти натрапила на щось незвичне — наприклад, дивне природне явище.',
+    a: { text: 'Починаєш гуглити, читати статті, розбиратися в причинах — хочеш зрозуміти механізм', type:'I' },
+    b: { text: 'Це надихає тебе — хочеш зафіксувати момент, намалювати, написати про це або зняти', type:'A' }
+  },
+  { id:'p7', types:['I','S'], context:'Подруга переживає через складну ситуацію.',
+    a: { text: 'Аналізуєш ситуацію, допомагаєш розібратися логічно — шукаєш рішення', type:'I' },
+    b: { text: 'Насамперед вислуховуєш, підтримуєш емоційно — важливо, щоб людині стало легше', type:'S' }
+  },
+  { id:'p8', types:['I','E'], context:'Тобі в голову прийшла цікава ідея для додатку.',
+    a: { text: 'Починаєш досліджувати тему: чи є щось подібне, як це працює технічно, які дані потрібні', type:'I' },
+    b: { text: 'Одразу думаєш: кому це потрібно, як це продати, шукаєш команду і ресурси', type:'E' }
+  },
+  { id:'p9', types:['I','C'], context:'У тебе є доступ до великої бази даних (наприклад, статистика шкіл у країні).',
+    a: { text: 'Шукаєш неочевидні закономірності, перевіряєш гіпотези — хочеш зробити відкриття', type:'I' },
+    b: { text: 'Організовуєш дані, створюєш зрозумілі таблиці та графіки — щоб все було чітко', type:'C' }
+  },
+  { id:'p10', types:['A','S'], context:'Тебе попросили допомогти з благодійним заходом.',
+    a: { text: 'Робиш дизайн афіші, пишеш тексти, придумуєш оформлення — творча частина', type:'A' },
+    b: { text: 'Спілкуєшся з людьми, координуєш волонтерів, зустрічаєш гостей — людська частина', type:'S' }
+  },
+  { id:'p11', types:['A','E'], context:'Ти хочеш вести свій блог або канал.',
+    a: { text: 'Головне — щоб контент був красивий, авторський, з твоїм стилем і душею', type:'A' },
+    b: { text: 'Головне — щоб канал ріс, була аудиторія, монетизація і вплив', type:'E' }
+  },
+  { id:'p12', types:['A','C'], context:'Тобі доручили оформити шкільну газету.',
+    a: { text: 'Фокусуєшся на дизайні, ілюстраціях і тому, щоб вона виглядала стильно', type:'A' },
+    b: { text: 'Фокусуєшся на структурі, дедлайнах і тому, щоб все було вчасно і без помилок', type:'C' }
+  },
+  { id:'p13', types:['S','E'], context:'У класі конфлікт і треба щось вирішити.',
+    a: { text: 'Намагаєшся зрозуміти обидві сторони, помирити людей і знайти компроміс', type:'S' },
+    b: { text: 'Берешся за ситуацію, пропонуєш чіткий план дій і переконуєш інших його підтримати', type:'E' }
+  },
+  { id:'p14', types:['S','C'], context:'Тобі запропонували роботу в дитячому таборі.',
+    a: { text: 'Хочеш бути вожатою — працювати з дітьми, придумувати ігри, підтримувати', type:'S' },
+    b: { text: 'Хочеш бути адміністратором — складати розклад, вести документацію, контролювати процес', type:'C' }
+  },
+  { id:'p15', types:['E','C'], context:'Ви з друзями вирішили організувати подію (вечірку, захід, збір коштів).',
+    a: { text: 'Ти — той, хто генерує ідеї, мотивує людей, вирішує проблеми на ходу', type:'E' },
+    b: { text: 'Ти — той, хто робить план, бюджет, чек-лісти і слідкує, щоб нічого не забули', type:'C' }
+  }
+];
+
+// --- Section 2: "Коли час зникає" (Flow activities, multi-check) ---
+const flowQuestion = {
+  id: 'flow',
+  text: 'Відзнач все, за чим ти можеш залипнути так, що забуваєш про час:',
+  context: 'Обери стільки варіантів, скільки підходить. Це можуть бути речі, які ти робиш вдома, у школі, з друзями — будь-де.',
+  items: [
+    { id:'f1', text: 'Малювати, ліпити, створювати щось руками', types: ['R','A'] },
+    { id:'f2', text: 'Читати статті, дивитись документалки, вивчати нову тему', types: ['I'] },
+    { id:'f3', text: 'Знімати або монтувати відео, фотографувати', types: ['A'] },
+    { id:'f4', text: 'Грати у стратегічні ігри або розв\'язувати головоломки', types: ['I','C'] },
+    { id:'f5', text: 'Спілкуватись з друзями, знайомитись з новими людьми', types: ['S','E'] },
+    { id:'f6', text: 'Готувати, пекти, експериментувати з рецептами', types: ['R','A'] },
+    { id:'f7', text: 'Допомагати комусь розібратися з проблемою', types: ['S'] },
+    { id:'f8', text: 'Організовувати щось — поїздки, заходи, плани', types: ['E','C'] },
+    { id:'f9', text: 'Писати — тексти, щоденник, пости, вірші', types: ['A','I'] },
+    { id:'f10', text: 'Розбиратись у техніці, додатках, налаштовувати гаджети', types: ['R','I'] },
+    { id:'f11', text: 'Займатись спортом або будь-якою фізичною активністю', types: ['R'] },
+    { id:'f12', text: 'Планувати свій час, робити списки, розкладати все по поличках', types: ['C'] },
+    { id:'f13', text: 'Придумувати бізнес-ідеї або способи заробити', types: ['E'] },
+    { id:'f14', text: 'Слухати чиюсь історію і по-справжньому її розуміти', types: ['S'] },
+    { id:'f15', text: 'Вивчати мови, культури інших країн', types: ['I','S'] },
+    { id:'f16', text: 'Декорувати простір, підбирати кольори, стиль', types: ['A'] }
+  ]
+};
+
+// --- Section 3: Values (scenario-based forced choice) ---
+const valueQuestions = [
+  { id:'v1', value1:'creativity', value2:'stability',
+    text: 'Уяви дві роботи. Яка тобі ближче?',
+    a: { text: 'Кожен день різний, ти вигадуєш нове, але немає гарантій і чіткого плану', label: 'creativity' },
+    b: { text: 'Все передбачувано, є графік і стабільна зарплата, але мало простору для фантазії', label: 'stability' }
+  },
+  { id:'v2', value1:'freedom', value2:'team',
+    text: 'Як тобі комфортніше працювати?',
+    a: { text: 'Сама вирішуєш коли, де і як працювати — навіть якщо це означає бути самій', label: 'freedom' },
+    b: { text: 'У дружній команді, де є підтримка і спілкування — навіть якщо графік жорсткий', label: 'team' }
+  },
+  { id:'v3', value1:'impact', value2:'money',
+    text: 'Що для тебе важливіше у майбутній роботі?',
+    a: { text: 'Знати, що твоя робота реально допомагає людям або змінює щось на краще', label: 'impact' },
+    b: { text: 'Мати високий дохід і фінансову незалежність', label: 'money' }
+  },
+  { id:'v4', value1:'growth', value2:'comfort',
+    text: 'Який режим тобі ближче?',
+    a: { text: 'Постійно вчитися новому, навіть якщо це складно і виснажливо', label: 'growth' },
+    b: { text: 'Добре робити те, що вже вмієш, у комфортному темпі', label: 'comfort' }
+  },
+  { id:'v5', value1:'independence', value2:'guidance',
+    text: 'Уяви свій перший робочий день.',
+    a: { text: 'Тобі кажуть: «Ось задача — роби як вважаєш потрібним». Кайф!', label: 'independence' },
+    b: { text: 'Тобі кажуть: «Ось ментор, він все покаже і допоможе». Кайф!', label: 'guidance' }
+  },
+  { id:'v6', value1:'variety', value2:'depth',
+    text: 'Що тебе більше приваблює?',
+    a: { text: 'Кожного тижня нові проєкти, люди, задачі — ніколи не нудно', label: 'variety' },
+    b: { text: 'Глибоко занурюватися в одну тему і ставати справжнім експертом', label: 'depth' }
+  },
+  { id:'v7', value1:'beauty', value2:'efficiency',
+    text: 'Що для тебе важливіше в результаті роботи?',
+    a: { text: 'Щоб це виглядало красиво, стильно і викликало емоції', label: 'beauty' },
+    b: { text: 'Щоб це працювало ефективно і вирішувало задачу', label: 'efficiency' }
+  },
+  { id:'v8', value1:'recognition', value2:'peace',
+    text: 'Що ти обереш?',
+    a: { text: 'Яскраву кар\'єру з визнанням, але великий тиск і конкуренція', label: 'recognition' },
+    b: { text: 'Спокійне життя без гонки, але без широкого визнання', label: 'peace' }
+  },
+  { id:'v9', value1:'risk', value2:'security',
+    text: 'Яка перспектива тебе більше захоплює?',
+    a: { text: 'Запустити свою справу — ризик є, але і потенціал величезний', label: 'risk' },
+    b: { text: 'Працювати у відомій компанії — менше ризику, зате стабільність і ресурси', label: 'security' }
+  },
+  { id:'v10', value1:'help_close', value2:'help_system',
+    text: 'Як тобі ближче допомагати?',
+    a: { text: 'Безпосередньо конкретним людям — бачити їхні обличчя і подяку', label: 'help_close' },
+    b: { text: 'Створювати системи, які допомагають тисячам — навіть якщо ти їх ніколи не побачиш', label: 'help_system' }
+  }
+];
+
+// --- Section 4: Skills (concrete situational, 5-point scale) ---
+const skillQuestions = [
+  { id:'sk1', skill:'communication', text: 'Ти легко можеш пояснити другу складну тему з математики чи історії так, що він зрозуміє.',
+    context: 'Як часто таке буває?' },
+  { id:'sk2', skill:'logic', text: 'Коли щось не працює (комп\'ютер, план, рецепт), ти крок за кроком знаходиш, де проблема.',
+    context: '' },
+  { id:'sk3', skill:'visual', text: 'Ти помічаєш, коли щось виглядає «не так» — у дизайні, в одязі, в оформленні кімнати.',
+    context: '' },
+  { id:'sk4', skill:'empathy', text: 'Ти відчуваєш настрій людини, навіть коли вона каже, що все нормально.',
+    context: '' },
+  { id:'sk5', skill:'organization', text: 'Коли група друзів не може визначитись з планами, ти берешся і все організовуєш.',
+    context: '' },
+  { id:'sk6', skill:'leadership', text: 'У групових проєктах інші природно дивляться на тебе як на лідера.',
+    context: '' },
+  { id:'sk7', skill:'tech', text: 'Ти швидко розбираєшся в новому додатку чи програмі — часто без інструкцій.',
+    context: '' },
+  { id:'sk8', skill:'writing', text: 'Тобі легше висловити думку письмово (в повідомленні, пості), ніж усно.',
+    context: '' },
+  { id:'sk9', skill:'numbers', text: 'Тебе не лякають таблиці, бюджети або підрахунки — тобі навіть цікаво з ними працювати.',
+    context: '' },
+  { id:'sk10', skill:'adaptability', text: 'Коли плани різко змінюються, ти швидко перебудовуєшся і не дуже переживаєш.',
+    context: '' }
+];
+
+const skillLabels = ['Зовсім\nне про мене', 'Рідко', 'Іноді', 'Часто', 'Це точно\nпро мене'];
+
+// ============================================================
+// RIASEC TYPE DATA
+// ============================================================
+const riasecTypes = {
+  R: {
+    name: 'Практик (Doer)', color: '#E17055', emoji: '🔧',
+    desc: 'Ти любиш бачити реальний результат своєї роботи. Тобі подобається працювати руками, з технікою або в русі. Ти цінуєш конкретність і дію більше, ніж довгі обговорення.',
+    example: 'Тобі ближче не читати про те, як щось влаштовано, а взяти і зробити самій.',
+    searchTerms: ['engineering', 'architecture', 'environmental science', 'food technology', 'robotics', 'sports science', 'veterinary', 'industrial design'],
+    fields: [
+      { name: 'Інженерія та технології', careers: ['Інженер-конструктор', 'Архітектор', 'Промисловий дизайнер', 'Робототехнік', 'Інженер 3D-друку', 'Технік відновлювальної енергетики'] },
+      { name: 'Кулінарія та ремесла', careers: ['Шеф-кухар', 'Кондитер', 'Ювелір', 'Кераміст', 'Флорист', 'Сомельє', 'Фуд-стиліст', 'Майстер реставрації'] },
+      { name: 'Природа та довкілля', careers: ['Ветеринар', 'Ландшафтний дизайнер', 'Еколог', 'Агроном', 'Лісівник', 'Океанограф', 'Спеціаліст з пермакультури'] },
+      { name: 'Рух та спорт', careers: ['Фітнес-тренер', 'Фізичний терапевт', 'Спортивний тренер', 'Інструктор з йоги', 'Ерготерапевт'] },
+      { name: '🔮 Неочевидні варіанти', careers: ['Дрон-оператор', 'Спеціаліст з вертикального фермерства', 'Технік протезування', 'Майстер з відновлення коралових рифів', 'Інспектор мостів та споруд', 'Спеціаліст з утилізації електроніки', 'Космічний інженер (New Space)', 'Розробник носимих пристроїв'] }
+    ]
+  },
+  I: {
+    name: 'Дослідник (Thinker)', color: '#6C5CE7', emoji: '🔬',
+    desc: 'У тебе допитливий розум — ти хочеш не просто знати факти, а розуміти причини і зв\'язки. Тебе захоплює процес пошуку відповідей.',
+    example: 'Ти з тих, хто може загуглити одне питання і через годину виявити, що прочитала 15 статей на суміжні теми.',
+    searchTerms: ['computer science', 'data science', 'biology', 'pharmacy', 'psychology', 'mathematics', 'physics', 'neuroscience', 'bioinformatics'],
+    fields: [
+      { name: 'Наука та дослідження', careers: ['Науковець', 'Біотехнолог', 'Data Scientist', 'Фармацевт', 'Нейронауковець', 'Кліматолог', 'Астрофізик'] },
+      { name: 'IT та аналітика', careers: ['Програміст', 'Аналітик даних', 'UX-дослідник', 'Спеціаліст з кібербезпеки', 'ML-інженер', 'Блокчейн-розробник'] },
+      { name: 'Медицина та біо', careers: ['Лікар', 'Генетик', 'Психолог-дослідник', 'Епідеміолог', 'Біоінформатик', 'Фармаколог'] },
+      { name: '🔮 Неочевидні варіанти', careers: ['AI-етик (етика штучного інтелекту)', 'Геймдизайнер наукових симуляцій', 'Forensic analyst (криміналістичний аналітик)', 'Спеціаліст з обчислювальної лінгвістики', 'Дослідник поведінки споживачів', 'Біохакер / спеціаліст з longevity', 'Climate tech дослідник', 'Квантовий програміст', 'OSINT-аналітик (розвідка відкритих джерел)', 'Спеціаліст з цифрової археології'] }
+    ]
+  },
+  A: {
+    name: 'Креатор (Creator)', color: '#E84393', emoji: '🎨',
+    desc: 'Ти бачиш світ по-своєму і хочеш це виразити. Тобі важлива свобода, оригінальність і можливість створювати щось, чого ще не було.',
+    example: 'Навіть у звичайній домашній роботі ти знаходиш спосіб зробити щось по-своєму.',
+    searchTerms: ['design', 'media', 'communication', 'arts', 'film', 'animation', 'creative writing', 'fashion', 'photography', 'music'],
+    fields: [
+      { name: 'Дизайн', careers: ['UX/UI-дизайнер', 'Графічний дизайнер', 'Дизайнер одягу', 'Бренд-дизайнер', 'Дизайнер інтер\'єрів', 'Моушн-дизайнер', 'Дизайнер шрифтів'] },
+      { name: 'Медіа та контент', careers: ['Відеограф', 'Фотограф', 'Контент-креатор', 'Сценарист', 'Подкастер', 'Режисер', 'Продюсер'] },
+      { name: 'Слово та мистецтво', careers: ['Копірайтер', 'Журналіст', 'Ілюстратор', 'Аніматор', 'Письменник', 'Поет-перформер', 'Каліграф'] },
+      { name: 'Музика та звук', careers: ['Саунд-дизайнер', 'Музичний продюсер', 'Діджей', 'Композитор для ігор/кіно', 'Звукорежисер'] },
+      { name: '🔮 Неочевидні варіанти', careers: ['Дизайнер віртуальних світів (Metaverse)', 'NFT/цифровий художник', 'Наративний дизайнер відеоігор', 'UX-письменник (мікрокопірайтинг)', 'Колорист (кіно, фото)', 'Фуд-фотограф', 'Дизайнер досвіду (Experience Designer)', 'Творець ASMR-контенту', 'Бренд-стратег для особистих брендів', 'Креативний технолог', 'Дизайнер для 3D-друку ювелірних виробів'] }
+    ]
+  },
+  S: {
+    name: 'Помічник (Helper)', color: '#00B894', emoji: '🤝',
+    desc: 'Ти природно відчуваєш людей і хочеш, щоб їм було добре. Тобі подобається бути поруч, підтримувати і бачити, як завдяки тобі щось змінюється на краще.',
+    example: 'Друзі часто приходять до тебе за порадою або просто поговорити — і ти правда вмієш слухати.',
+    searchTerms: ['psychology', 'social work', 'education', 'medicine', 'nursing', 'therapy', 'counseling', 'public health', 'speech therapy'],
+    fields: [
+      { name: 'Психологія та терапія', careers: ['Психолог', 'Коуч', 'Арт-терапевт', 'HR-фахівець', 'Сімейний терапевт', 'Кризовий консультант'] },
+      { name: 'Освіта та розвиток', careers: ['Вчитель', 'Тренер', 'Методист курсів', 'Ментор', 'Логопед', 'Спеціальний педагог', 'Тьютор'] },
+      { name: 'Медицина та догляд', careers: ['Лікар', 'Реабілітолог', 'Дієтолог', 'Соціальний працівник', 'Медсестра', 'Акушер'] },
+      { name: 'Спільнота та НКО', careers: ['Координатор волонтерів', 'Фандрейзер', 'Медіатор (вирішення конфліктів)', 'Комʼюніті-менеджер'] },
+      { name: '🔮 Неочевидні варіанти', careers: ['Терапевт для підлітків у соцмережах', 'Спеціаліст з буллінг-превенції', 'Консультант з нейрорізноманіття (ADHD, аутизм)', 'Доула (підтримка при пологах)', 'Спеціаліст з Animal-assisted therapy', 'Grief counselor (підтримка при втраті)', 'Координатор програм для біженців', 'Фасилітатор діалогів', 'Дизайнер інклюзивного середовища', 'Консультант з ментального здоров\'я в IT-компаніях'] }
+    ]
+  },
+  E: {
+    name: 'Лідер (Persuader)', color: '#E67E22', emoji: '🚀',
+    desc: 'Ти бачиш можливості і хочеш їх реалізувати. Тобі подобається впливати, переконувати, організовувати і рухати речі вперед.',
+    example: 'Якщо група не може визначитись, куди піти — скоріше за все, врешті вирішуєш ти.',
+    searchTerms: ['business', 'management', 'marketing', 'entrepreneurship', 'law', 'economics', 'political science', 'international relations', 'MBA'],
+    fields: [
+      { name: 'Бізнес та стартапи', careers: ['Підприємець', 'Продакт-менеджер', 'Бізнес-консультант', 'Стартапер', 'Венчурний аналітик', 'Бізнес-девелопер'] },
+      { name: 'Маркетинг та PR', careers: ['Маркетолог', 'PR-фахівець', 'Бренд-менеджер', 'SMM-стратег', 'Growth-менеджер', 'Інфлюенс-маркетолог'] },
+      { name: 'Управління та право', careers: ['Проєктний менеджер', 'HR-директор', 'Юрист', 'Політичний аналітик', 'Дипломат', 'Медіатор'] },
+      { name: 'Нерухомість та фінанси', careers: ['Ріелтор', 'Інвестиційний аналітик', 'Фінансовий консультант', 'Страховий брокер'] },
+      { name: '🔮 Неочевидні варіанти', careers: ['Creator economy менеджер (управління блогерами)', 'Спеціаліст з GR (Government Relations)', 'Лобіст екологічних ініціатив', 'Продюсер подій та фестивалів', 'Chief of Staff у стартапі', 'Talent scout (пошук талантів)', 'Спеціаліст з краудфандингу', 'Антикризовий менеджер', 'Засновник соціального підприємства', 'Карʼєрний консультант', 'Franchise-менеджер'] }
+    ]
+  },
+  C: {
+    name: 'Організатор (Organizer)', color: '#0984E3', emoji: '📊',
+    desc: 'Ти любиш, коли все на своїх місцях. Ти уважна до деталей, тобі подобається працювати з інформацією і створювати порядок там, де його не було.',
+    example: 'Ти з тих, хто робить красиві конспекти, планує поїздки до деталей або веде акуратні списки.',
+    searchTerms: ['finance', 'accounting', 'information systems', 'logistics', 'business analytics', 'quality management', 'actuarial science', 'supply chain'],
+    fields: [
+      { name: 'Фінанси та облік', careers: ['Фінансовий аналітик', 'Аудитор', 'Фінансовий планувальник', 'Бухгалтер', 'Актуарій', 'Податковий консультант'] },
+      { name: 'IT-системи', careers: ['QA-тестувальник', 'Бізнес-аналітик', 'Системний адміністратор', 'DevOps', 'Database-адміністратор', 'IT-аудитор'] },
+      { name: 'Адміністрування та логістика', careers: ['Логіст', 'Операційний менеджер', 'Нотаріус', 'Комплаєнс-менеджер', 'Офіс-менеджер', 'Supply chain менеджер'] },
+      { name: '🔮 Неочевидні варіанти', careers: ['Спеціаліст з GDPR / захисту даних', 'Digital librarian (цифровий бібліотекар)', 'Taxonomy designer (дизайнер класифікацій)', 'Спеціаліст з carbon accounting (облік вуглецевого сліду)', 'Forensic accountant (фінансовий детектив)', 'Спеціаліст з ESG-звітності', 'Аналітик ланцюга поставок', 'Архівіст цифрових колекцій', 'Спеціаліст з автоматизації процесів (RPA)', 'Тестувальник доступності (a11y)'] }
+    ]
+  }
+};
+
+const valueNames = {
+  creativity:'Творчість', stability:'Стабільність', freedom:'Свобода', team:'Команда',
+  impact:'Вплив на світ', money:'Дохід', growth:'Розвиток', comfort:'Комфорт',
+  independence:'Незалежність', guidance:'Наставництво', variety:'Різноманітність',
+  depth:'Глибина', beauty:'Естетика', efficiency:'Ефективність', recognition:'Визнання',
+  peace:'Спокій', risk:'Ризик', security:'Безпека', help_close:'Пряма допомога',
+  help_system:'Системна допомога'
+};
+
+const skillNames = {
+  communication:'Комунікація', logic:'Аналітика', visual:'Візуальне мислення',
+  empathy:'Емпатія', organization:'Організованість', leadership:'Лідерство',
+  tech:'Технічність', writing:'Письмо', numbers:'Робота з числами', adaptability:'Адаптивність'
+};
+
+// ============================================================
+// STATE
+// ============================================================
+const TOTAL = pairQuestions.length + 1 + valueQuestions.length + skillQuestions.length; // 15+1+10+10=36
+let current = 0;
+let answers = {};
+let flowChecked = {};
+
+const sectionRanges = [
+  { start: 0, end: 14, name: '🎯 Що тобі ближче?' },
+  { start: 15, end: 15, name: '⏰ Коли час зникає?' },
+  { start: 16, end: 25, name: '💎 Що для тебе важливо?' },
+  { start: 26, end: 35, name: '💪 Твої суперсили' }
+];
+
+function getSectionName(idx) {
+  for (const s of sectionRanges) { if (idx >= s.start && idx <= s.end) return s.name; }
+  return '';
+}
+
+function getQuestionData(idx) {
+  if (idx < 15) return { type: 'pair', data: pairQuestions[idx] };
+  if (idx === 15) return { type: 'flow', data: flowQuestion };
+  if (idx < 26) return { type: 'value', data: valueQuestions[idx - 16] };
+  return { type: 'skill', data: skillQuestions[idx - 26] };
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function startTest() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('test-area').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = getQuestionData(current);
+  const container = document.getElementById('questions-container');
+  let html = '';
+
+  if (q.type === 'pair') {
+    const d = q.data;
+    const sel = answers[d.id];
+    html = `<div class="question-card">
+      <div class="question-number">Питання ${current+1} з ${TOTAL}</div>
+      <div class="question-text">${d.context}</div>
+      <div class="question-context">Що б ти скоріше обрала?</div>
+      <div class="choice-pair">
+        <button class="choice-btn ${sel==='a'?'selected':''}" onclick="selectPair('${d.id}','a')">
+          <div class="choice-letter">А</div>
+          <div class="choice-text">${d.a.text}</div>
+        </button>
+        <button class="choice-btn ${sel==='b'?'selected':''}" onclick="selectPair('${d.id}','b')">
+          <div class="choice-letter">Б</div>
+          <div class="choice-text">${d.b.text}</div>
+        </button>
+      </div>
+    </div>`;
+  } else if (q.type === 'flow') {
+    html = `<div class="question-card">
+      <div class="question-number">Питання ${current+1} з ${TOTAL}</div>
+      <div class="question-text">${flowQuestion.text}</div>
+      <div class="question-context">${flowQuestion.context}</div>
+      <div class="check-grid">
+        ${flowQuestion.items.map(item => `
+          <div class="check-item ${flowChecked[item.id]?'checked':''}" onclick="toggleFlow('${item.id}')">
+            <div class="check-box">${flowChecked[item.id]?'✓':''}</div>
+            <div>${item.text}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  } else if (q.type === 'value') {
+    const d = q.data;
+    const sel = answers[d.id];
+    html = `<div class="question-card">
+      <div class="question-number">Питання ${current+1} з ${TOTAL}</div>
+      <div class="question-text">${d.text}</div>
+      <div class="choice-pair">
+        <button class="choice-btn ${sel==='a'?'selected':''}" onclick="selectPair('${d.id}','a')">
+          <div class="choice-letter">А</div>
+          <div class="choice-text">${d.a.text}</div>
+        </button>
+        <button class="choice-btn ${sel==='b'?'selected':''}" onclick="selectPair('${d.id}','b')">
+          <div class="choice-letter">Б</div>
+          <div class="choice-text">${d.b.text}</div>
+        </button>
+      </div>
+    </div>`;
+  } else if (q.type === 'skill') {
+    const d = q.data;
+    const sel = answers[d.id];
+    html = `<div class="question-card">
+      <div class="question-number">Питання ${current+1} з ${TOTAL}</div>
+      <div class="question-text">${d.text}</div>
+      ${d.context ? `<div class="question-context">${d.context}</div>` : ''}
+      <div class="likert-wrap">
+        <div class="likert-options">
+          ${skillLabels.map((label, i) => `
+            <button class="likert-btn ${sel===(i+1)?'selected':''}" onclick="selectSkill('${d.id}',${i+1})">${label.replace('\n','<br>')}</button>
+          `).join('')}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  container.innerHTML = html;
+
+  // Progress
+  document.getElementById('section-name').textContent = getSectionName(current);
+  document.getElementById('progress-text').textContent = `${current+1} / ${TOTAL}`;
+  document.getElementById('progress-fill').style.width = `${((current+1)/TOTAL)*100}%`;
+
+  // Nav
+  document.getElementById('btn-prev').style.display = current > 0 ? 'block' : 'none';
+  const btnNext = document.getElementById('btn-next');
+  if (current === TOTAL - 1) {
+    btnNext.textContent = '✨ Показати результати';
+    btnNext.className = 'btn-nav btn-finish';
+    btnNext.onclick = showResults;
+  } else {
+    btnNext.textContent = 'Далі →';
+    btnNext.className = 'btn-nav btn-next';
+    btnNext.onclick = nextQuestion;
+  }
+  updateNextBtn();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateNextBtn() {
+  const q = getQuestionData(current);
+  const btn = document.getElementById('btn-next');
+  if (q.type === 'flow') {
+    btn.disabled = false; // flow is optional multi-check
+  } else if (q.type === 'pair' || q.type === 'value') {
+    btn.disabled = !answers[q.data.id];
+  } else if (q.type === 'skill') {
+    btn.disabled = !answers[q.data.id];
+  }
+}
+
+function selectPair(qId, choice) {
+  answers[qId] = choice;
+  document.querySelectorAll('.choice-btn').forEach(btn => btn.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  updateNextBtn();
+}
+
+function toggleFlow(itemId) {
+  flowChecked[itemId] = !flowChecked[itemId];
+  renderQuestion();
+}
+
+function selectSkill(qId, val) {
+  answers[qId] = val;
+  document.querySelectorAll('.likert-btn').forEach((btn, i) => btn.classList.toggle('selected', i+1 === val));
+  updateNextBtn();
+}
+
+function nextQuestion() { if (current < TOTAL-1) { current++; renderQuestion(); } }
+function prevQuestion() { if (current > 0) { current--; renderQuestion(); } }
+
+// ============================================================
+// RESULTS
+// ============================================================
+function showResults() {
+  document.getElementById('test-area').style.display = 'none';
+
+  // --- Calculate RIASEC ---
+  const riasecScores = { R:0, I:0, A:0, S:0, E:0, C:0 };
+
+  // From pairs
+  pairQuestions.forEach(q => {
+    const choice = answers[q.id];
+    if (choice === 'a') riasecScores[q.a.type] += 2;
+    else if (choice === 'b') riasecScores[q.b.type] += 2;
+  });
+
+  // From flow
+  flowQuestion.items.forEach(item => {
+    if (flowChecked[item.id]) {
+      item.types.forEach(t => riasecScores[t] += 1);
+    }
+  });
+
+  const maxPossibleRiasec = 14; // rough max per type
+  const sortedRiasec = Object.entries(riasecScores).sort((a,b) => b[1] - a[1]);
+  const topCode = sortedRiasec.slice(0,3).map(e => e[0]).join('');
+
+  // --- Calculate Values ---
+  const valueScores = {};
+  valueQuestions.forEach(q => {
+    const choice = answers[q.id];
+    if (choice === 'a') valueScores[q.a.label] = (valueScores[q.a.label]||0) + 1;
+    else if (choice === 'b') valueScores[q.b.label] = (valueScores[q.b.label]||0) + 1;
+  });
+  const sortedValues = Object.entries(valueScores).sort((a,b) => b[1] - a[1]);
+
+  // --- Calculate Skills ---
+  const skillScores = {};
+  skillQuestions.forEach(q => {
+    skillScores[q.skill] = answers[q.id] || 3;
+  });
+  const sortedSkills = Object.entries(skillScores).sort((a,b) => b[1] - a[1]);
+
+  // --- Render ---
+  const maxBar = Math.max(...sortedRiasec.map(r => r[1]), 1);
+
+  let html = `
+    <div class="results-header">
+      <div style="font-size:48px;margin-bottom:12px;">🌟</div>
+      <h2>Твій профіль: ${topCode}</h2>
+      <p>Ось що ми з'ясували на основі твоїх відповідей</p>
+    </div>
+
+    <!-- RIASEC -->
+    <div class="result-section">
+      <h3><span>🎯</span> Твої типи інтересів</h3>
+      <p>Це не категорія, в яку тебе «записали» — це спектр. У кожної людини є трохи від кожного типу, просто деякі виражені сильніше.</p>
+      <div class="riasec-chart">
+        ${sortedRiasec.map(([type, score]) => {
+          const pct = Math.round((score / maxBar) * 100);
+          const height = Math.max(12, (score / maxBar) * 150);
+          return `<div class="riasec-bar-wrap">
+            <div class="riasec-bar" style="height:${height}px;background:${riasecTypes[type].color};">
+              <span class="bar-value" style="color:${riasecTypes[type].color}">${pct}%</span>
+            </div>
+            <div class="riasec-label">
+              <strong>${riasecTypes[type].emoji} ${type}</strong>
+              ${riasecTypes[type].name.split(' (')[0]}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      ${sortedRiasec.slice(0,3).map(([type, score], i) => `
+        <div class="type-card top-${i+1}">
+          <h4>${i===0?'🥇':i===1?'🥈':'🥉'} ${riasecTypes[type].name}</h4>
+          <p>${riasecTypes[type].desc}</p>
+          <p style="font-style:italic;font-size:0.85em;color:#888;">${riasecTypes[type].example}</p>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- CAREERS -->
+    <div class="result-section">
+      <h3><span>💼</span> Напрямки, які варто розглянути</h3>
+      <p>Це не список «ти маєш стати цим». Це ідеї для дослідження — спробуй дізнатися більше про ті, що відгукуються.</p>
+      ${sortedRiasec.slice(0,3).map(([type]) => {
+        const t = riasecTypes[type];
+        return t.fields.map(field => `
+          <div class="career-field">
+            <h4>${t.emoji} ${field.name}</h4>
+            <div class="career-tags">
+              ${field.careers.map(c => `<span class="career-tag">${c}</span>`).join('')}
+            </div>
+          </div>
+        `).join('');
+      }).join('')}
+    </div>
+
+    <!-- VALUES -->
+    <div class="result-section">
+      <h3><span>💎</span> Що для тебе важливо</h3>
+      <p>Ці цінності — як компас. Навіть «правильна» професія буде некомфортною, якщо робоче середовище не відповідає тому, що тобі важливо.</p>
+      ${sortedValues.length > 0 ? sortedValues.map(([val, score]) => {
+        const colors = ['#E84393','#6C5CE7','#00B894','#0984E3','#E67E22','#A29BFE','#00CEC9','#D63031','#636E72','#FD79A8'];
+        const ci = Object.keys(valueNames).indexOf(val) % colors.length;
+        return `<div class="bar-item">
+          <span class="bar-label">${valueNames[val] || val}</span>
+          <div class="bar-bg"><div class="bar-fill" style="width:${score*50}%;background:${colors[ci]}"></div></div>
+          <span class="bar-pct">${score}</span>
+        </div>`;
+      }).join('') : '<p>Відповіді не зафіксовані</p>'}
+    </div>
+
+    <!-- SKILLS -->
+    <div class="result-section">
+      <h3><span>💪</span> Твої сильні сторони</h3>
+      <p>Це здібності, які ти вже маєш. Головна порада: розвивай сильне, а не намагайся «підтягнути» слабке.</p>
+      ${sortedSkills.slice(0,6).map(([sk, score], i) => {
+        const pct = Math.round((score / 5) * 100);
+        const colors = ['#E84393','#6C5CE7','#00B894','#0984E3','#E67E22','#A29BFE'];
+        return `<div class="bar-item">
+          <span class="bar-label">${skillNames[sk]}</span>
+          <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${colors[i]}"></div></div>
+          <span class="bar-pct">${pct}%</span>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <!-- COMBINATION -->
+    <div class="result-section">
+      <h3><span>🔮</span> Твоя унікальна комбінація</h3>
+      <p>${generateCombinationInsight(sortedRiasec, sortedValues)}</p>
+    </div>
+
+    <!-- RECOMMENDATIONS -->
+    <div class="result-section">
+      <h3><span>🗺️</span> Що робити далі?</h3>
+      ${generateRecommendations(sortedRiasec, sortedValues, sortedSkills)}
+    </div>
+
+    <!-- DISCUSSION QUESTIONS -->
+    <div class="result-section">
+      <h3><span>💬</span> Запитання для розмови</h3>
+      <p>Ці питання можна обговорити з кимось близьким — дядьком, мамою, другом. Часто в розмові ми розуміємо себе краще, ніж наодинці з тестом.</p>
+      ${generateDiscussionQuestions(sortedRiasec, sortedValues)}
+    </div>
+
+    <!-- UNIVERSITY SEARCH -->
+    ${generateUniSearch(sortedRiasec)}
+
+    <div class="disclaimer">
+      <strong>Пам'ятай:</strong> цей тест — це дзеркало, а не вирок. Він показує, як ти відчуваєш себе зараз, і це може змінюватися — і це нормально. Базується на моделі RIASEC Джона Голланда, яку використовують консультанти з профорієнтації по всьому світу вже понад 70 років. Але твоє майбутнє визначаєш тільки ти.
+    </div>
+
+    <div class="results-actions">
+      <button class="btn-print" onclick="window.print()">🖨️ Роздрукувати</button>
+      <button class="btn-restart" onclick="restart()">🔄 Пройти знову</button>
+    </div>
+  `;
+
+  const resultsDiv = document.getElementById('results');
+  resultsDiv.innerHTML = html;
+  resultsDiv.style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================================
+// RESULT GENERATORS
+// ============================================================
+function generateCombinationInsight(riasec, values) {
+  const t1 = riasec[0][0], t2 = riasec[1][0];
+  const topVals = values.slice(0,2).map(v => valueNames[v[0]] || v[0]);
+
+  const comboInsights = {
+    'RI': 'інженерія, робототехніка або прикладна наука — ти поєднуєш руки і голову',
+    'IR': 'прикладні дослідження, розробка або архітектура — ти хочеш і зрозуміти, і створити',
+    'RA': 'ювелірна справа, кулінарне мистецтво, архітектура — красиве і зроблене руками',
+    'AR': 'промисловий дизайн, кераміка, сценографія — мистецтво з практичним смислом',
+    'RS': 'фізична терапія, ветеринарія, спортивне тренерство — допомога через дію',
+    'SR': 'реабілітація, ерготерапія, прикладна педагогіка — допомога через практику',
+    'RE': 'управління будівництвом, спортивний менеджмент — лідерство через справу',
+    'ER': 'управління технічними командами або виробництвом — організація реальних процесів',
+    'RC': 'управління якістю, логістика, технічний контроль — порядок у реальному світі',
+    'CR': 'логістика, виробничий менеджмент — системність в практичних речах',
+    'IA': 'UX-дослідження, наукова візуалізація, EdTech — аналітика + творчість',
+    'AI': 'дизайн на основі даних, креативні технології — творчість + аналітика',
+    'IS': 'клінічна психологія, соціологія, медичні дослідження — наука про людей',
+    'SI': 'педагогічна діагностика, психолог-дослідник — розуміння людей через науку',
+    'IE': 'наукове підприємництво, R&D-менеджмент, техлід — дослідження + бізнес',
+    'EI': 'венчурний капітал, технологічний консалтинг — бізнес + глибоке розуміння',
+    'IC': 'data science, фінансова аналітика, біоінформатика — дані + точність',
+    'CI': 'бізнес-аналітика, QA, фінтех — структурність + допитливість',
+    'AS': 'арт-терапія, освітній контент, комʼюніті-менеджмент — творчість для людей',
+    'SA': 'театральна педагогіка, контент про ментальне здоров\'я — допомога через творчість',
+    'AE': 'креативний бізнес: студія, агенція або власний бренд — творчість + амбіції',
+    'EA': 'маркетинг, продюсування, запуск креативних проєктів — амбіції + творчість',
+    'AC': 'веб-дизайн, видавнича справа, управління контентом — краса + порядок',
+    'CA': 'продюсування, координація арт-проєктів — порядок + креатив',
+    'SE': 'HR-лідерство, соціальне підприємництво, організація подій — люди + вплив',
+    'ES': 'продакт-менеджмент, консалтинг, coaching — вплив + турбота про людей',
+    'SC': 'HR-менеджмент, адміністрування в медицині чи освіті — турбота + організація',
+    'CS': 'координація проєктів, соціальна адміністрація — організація + турбота',
+    'EC': 'операційний менеджмент, фінанси, логістика — амбіції + системність',
+    'CE': 'фінансове планування, бізнес у сфері послуг — системність + ініціатива'
+  };
+
+  const key = t1 + t2;
+  const insight = comboInsights[key] || 'унікальна ніша на перетині цих напрямків';
+
+  let text = `Твоя комбінація <strong>${riasecTypes[t1].emoji} ${riasecTypes[t1].name.split(' (')[0]}</strong> + <strong>${riasecTypes[t2].emoji} ${riasecTypes[t2].name.split(' (')[0]}</strong> — це твоя суперсила. Для тебе найцікавішими можуть виявитися: <strong>${insight}</strong>.`;
+
+  if (topVals.length >= 2) {
+    text += `<br><br>А головне, що тебе мотивує — це <strong>${topVals[0]}</strong> та <strong>${topVals[1]}</strong>. Тому коли будеш обирати, зверни увагу не лише на «що робити», а й на «де і як» — щоб робоче середовище відповідало тому, що тобі важливо.`;
+  }
+
+  text += `<br><br>У 17 років не потрібно знати фінальну відповідь. Досить розуміти напрямок — а деталі визначиш дорогою.`;
+
+  return text;
+}
+
+function generateRecommendations(riasec, values, skills) {
+  const top1 = riasec[0][0];
+  const topSkill = skills[0][0];
+  const recs = [];
+
+  const typeRecs = {
+    R: 'Спробуй щось практичне: майстер-клас з кераміки, кулінарний воркшоп, курси 3D-друку або робототехніки. Або просто почни робити проєкт руками — ти дізнаєшся про себе більше, ніж з будь-якого тесту.',
+    I: 'Знайди тему, яка тебе зараз найбільше цікавить, і пройди безкоштовний курс на Coursera, Prometheus або Khan Academy. Або спробуй взяти участь у науковому проєкті чи олімпіаді.',
+    A: 'Почни створювати і показувати: заведи портфоліо (навіть з кількох робіт), спробуй Figma, Canva або зніми короткометражку на телефон. Творчість починається з «просто спробую».',
+    S: 'Спробуй волонтерство, менторство для молодших або організацію подій у школі. Також корисно: почитай про психологію (книги Адлера, Петрановської) — тобі сподобається.',
+    E: 'Візьми участь у бізнес-кейс-змаганнях, організуй щось (подію, збір коштів, Telegram-канал з аудиторією). Підприємництво — це навичка, і її можна тренувати вже зараз.',
+    C: 'Спробуй вести бюджет, пройди курс по Excel або Google Sheets, або по основах програмування. Твоя суперсила — у тому, що ти бачиш систему там, де інші бачать хаос.'
+  };
+
+  recs.push(`<strong>Перший крок:</strong> ${typeRecs[top1]}`);
+  recs.push(`<strong>Твоя суперсила:</strong> <em>${skillNames[topSkill]}</em> — це те, що вже зараз вирізняє тебе серед інших. Шукай напрямки, де ця здібність буде твоєю перевагою.`);
+  recs.push(`<strong>Дослідження:</strong> Знайди 2-3 людини, які працюють у сферах, що тобі відгукнулися, і напиши їм (Instagram, LinkedIn, Telegram). Запитай: «Що вам найбільше подобається у вашій роботі? А що — ні?». Реальна розмова дає в рази більше, ніж читання описів професій.`);
+  recs.push(`<strong>Експеримент:</strong> Влітку спробуй стажування, підробіток або волонтерство в цікавій сфері. Навіть тиждень реального досвіду покаже, чи це «твоє», краще за будь-який тест.`);
+
+  return recs.map(r => `<div class="rec-item">${r}</div>`).join('');
+}
+
+function generateDiscussionQuestions(riasec, values) {
+  const top1 = riasec[0][0];
+  const qs = [
+    'Коли ти востаннє робила щось і забула про час? Що це було і чому це було так захоплюючо?',
+    'Якби гроші та оцінки інших не мали значення — чим би ти займалася кожен день?',
+    'Хто з людей, яких ти знаєш (або бачила онлайн), має роботу, яка тобі здається класною? Що саме в ній приваблює?',
+    'Що тобі найлегше дається без зусиль — те, що іншим здається складним?',
+    'Уяви себе через 5 років. Опиши не професію, а свій день — де ти, з ким, що робиш, як себе відчуваєш?'
+  ];
+
+  return qs.map(q => `<div class="discussion-card">${q}</div>`).join('');
+}
+
+function generateUniSearch(riasec) {
+  // Collect search terms from top 2 types
+  const top2 = riasec.slice(0,2).map(r => r[0]);
+  const allTerms = [];
+  top2.forEach(t => {
+    if (riasecTypes[t].searchTerms) allTerms.push(...riasecTypes[t].searchTerms);
+  });
+  const uniqueTerms = [...new Set(allTerms)].slice(0, 10);
+
+  // Generate search URLs
+  function daadUrl(term) {
+    return `https://www2.daad.de/deutschland/studienangebote/international-programmes/en/result/?q=${encodeURIComponent(term)}&degree%5B%5D=1&fos=0&lang%5B%5D=2&fee=1&sortBy=relevance`;
+  }
+  function studyEuUrl(term) {
+    return `https://www.study.eu/search?q=${encodeURIComponent(term)}&countries=de,es,no,at,fi,pl,cz,fr,it,nl&type=bachelor`;
+  }
+  function mastersportalUrl(term) {
+    return `https://www.bachelorsportal.com/search/#q=di-22|kw-${encodeURIComponent(term)}|lv-bachelor`;
+  }
+
+  const searchLinks = uniqueTerms.map(term =>
+    `<a class="uni-search-tag" href="${studyEuUrl(term)}" target="_blank" rel="noopener">🔍 ${term}</a>`
+  ).join('');
+
+  return `
+    <div class="result-section uni-section">
+      <h3><span>🎓</span> Де вчитися в Європі?</h3>
+      <p>Багато країн Європи пропонують безкоштовне або майже безкоштовне навчання. Для українців діють додаткові пільги та стипендії. Ось де шукати програми, які підходять під твій профіль.</p>
+
+      <div class="uni-country">
+        <span class="uni-free">🇩🇪 Безкоштовно</span>
+        <h4>Німеччина</h4>
+        <div class="uni-info">
+          Усі державні університети — <strong>безкоштовні</strong> для всіх, включно з українцями. Платиш лише семестровий внесок (~€150-350, включає проїзний). Є програми англійською. Для українців діє програма DAAD «Future Ukraine» зі стипендіями.
+        </div>
+        <div class="uni-links">
+          <a class="uni-link" href="https://www2.daad.de/deutschland/studienangebote/international-programmes/en/" target="_blank" rel="noopener">📚 DAAD — пошук програм</a>
+          <a class="uni-link secondary" href="https://www.daad.de/en/studying-in-germany/scholarships/daad-scholarships/" target="_blank" rel="noopener">💰 Стипендії DAAD</a>
+          <a class="uni-link secondary" href="https://www.study-in-germany.de/en/" target="_blank" rel="noopener">🇩🇪 Study in Germany</a>
+        </div>
+      </div>
+
+      <div class="uni-country">
+        <span class="uni-free">🇪🇸 Пільги для українців</span>
+        <h4>Іспанія</h4>
+        <div class="uni-info">
+          Українці зі статусом тимчасового захисту мають право на <strong>безкоштовний вступ до державних вишів</strong>, спрощене підтвердження атестату та доступ до мовних курсів. Державні університети — від €700/рік (часто покривається грантами). Є стипендії Erasmus+ та від муніципалітетів.
+        </div>
+        <div class="uni-links">
+          <a class="uni-link" href="https://www.study.eu/country/spain" target="_blank" rel="noopener">📚 Study.eu — Іспанія</a>
+          <a class="uni-link secondary" href="https://www.educacion.gob.es/notasdecorte/busquedaSimple.action" target="_blank" rel="noopener">🇪🇸 Пошук програм</a>
+          <a class="uni-link secondary" href="https://www.universia.es/" target="_blank" rel="noopener">🎓 Universia</a>
+        </div>
+      </div>
+
+      <div class="uni-country">
+        <span class="uni-free">🇪🇺 Ще варіанти в Європі</span>
+        <h4>Інші країни з безкоштовним або дешевим навчанням</h4>
+        <div class="uni-info">
+          <strong>Норвегія</strong> — повністю безкоштовно для всіх, навіть магістратура.<br>
+          <strong>Чехія</strong> — безкоштовно чеською мовою, багато програм для українців.<br>
+          <strong>Польща</strong> — спеціальні програми для українців, Карта поляка = безкоштовно.<br>
+          <strong>Австрія</strong> — ~€760/семестр, є стипендії для українців.<br>
+          <strong>Фінляндія</strong> — безкоштовно фінською/шведською, англійською — стипендії.<br>
+          <strong>Франція</strong> — від €170/рік у державних вишах.<br>
+          <strong>Італія</strong> — від €0-1600/рік залежно від доходу, пільги для біженців.
+        </div>
+        <div class="uni-links">
+          <a class="uni-link" href="https://www.study.eu/" target="_blank" rel="noopener">📚 Study.eu — вся Європа</a>
+          <a class="uni-link secondary" href="https://www.bachelorsportal.com/" target="_blank" rel="noopener">🌍 Bachelorsportal</a>
+          <a class="uni-link secondary" href="https://www.etf.europa.eu/en/faqs/scholarships-support-opportunities-ukrainian-students" target="_blank" rel="noopener">🇺🇦 Стипендії для українців (ETF)</a>
+          <a class="uni-link secondary" href="https://erudera.com/resources/list-of-universities-helping-ukrainian-students/" target="_blank" rel="noopener">🇺🇦 Університети, що допомагають українцям</a>
+        </div>
+      </div>
+
+      <div class="uni-search-based">
+        <h4>🔎 Пошук програм під твій профіль ${top2.map(t => riasecTypes[t].emoji).join('')}</h4>
+        <p style="font-size:0.85em;color:var(--text-light);margin-bottom:12px;">Натисни на ключове слово — відкриється пошук бакалаврських програм у Європі по цій спеціальності:</p>
+        <div class="uni-search-tags">
+          ${searchLinks}
+        </div>
+        <div style="margin-top:12px;">
+          <p style="font-size:0.82em;color:var(--text-light);">Або шукай самостійно на цих платформах:</p>
+          <div class="uni-links" style="margin-top:8px;">
+            ${uniqueTerms.slice(0,3).map(term =>
+              `<a class="uni-link" href="${daadUrl(term)}" target="_blank" rel="noopener">DAAD: ${term}</a>`
+            ).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;padding:14px 18px;background:#F0FFF9;border-radius:12px;border-left:3px solid var(--success);font-size:0.88em;line-height:1.6;">
+        <strong style="color:var(--success);">💡 Порада:</strong> Почни з <a href="https://www.study.eu/" target="_blank" rel="noopener" style="color:var(--primary);font-weight:600;">Study.eu</a> — там можна фільтрувати програми за країною, мовою навчання і вартістю. Також перевір <a href="https://www.daad.de/en/studying-in-germany/" target="_blank" rel="noopener" style="color:var(--primary);font-weight:600;">DAAD</a> для Німеччини — це найбільша база програм з фільтром «tuition-free». Для стипендій саме для українців дивись <a href="https://www.etf.europa.eu/en/faqs/scholarships-support-opportunities-ukrainian-students" target="_blank" rel="noopener" style="color:var(--primary);font-weight:600;">збірку від ETF</a>.
+      </div>
+    </div>
+  `;
+}
+
+function restart() {
+  current = 0;
+  answers = {};
+  flowChecked = {};
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('results').innerHTML = '';
+  document.getElementById('intro').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+<script>
+  pairQuestions.forEach(q=>answers[q.id]="a");
+  flowQuestion.items.forEach(i=>flowChecked[i.id]=true);
+  valueQuestions.forEach(q=>answers[q.id]="a");
+  skillQuestions.forEach(q=>answers[q.id]=4);
+  setTimeout(()=>showResults(), 500);
+</script></body>
+
+</html>
