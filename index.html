@@ -819,6 +819,11 @@ function showResults() {
       <p>Ось що ми з'ясували на основі твоїх відповідей</p>
     </div>
 
+    <div class="results-actions" style="margin-top:0;">
+      <button class="btn-print" onclick="exportResults()">📥 Експортувати</button>
+      <button class="btn-restart" onclick="restart()">🔄 Пройти знову</button>
+    </div>
+
     <!-- RIASEC -->
     <div class="result-section">
       <h3><span>🎯</span> Твої типи інтересів</h3>
@@ -920,10 +925,6 @@ function showResults() {
       <strong>Пам'ятай:</strong> цей тест — це дзеркало, а не вирок. Він показує, як ти відчуваєш себе зараз, і це може змінюватися — і це нормально. Базується на моделі RIASEC Джона Голланда, яку використовують консультанти з профорієнтації по всьому світу вже понад 70 років. Але твоє майбутнє визначаєш тільки ти.
     </div>
 
-    <div class="results-actions">
-      <button class="btn-print" onclick="window.print()">🖨️ Роздрукувати</button>
-      <button class="btn-restart" onclick="restart()">🔄 Пройти знову</button>
-    </div>
   `;
 
   const resultsDiv = document.getElementById('results');
@@ -1117,6 +1118,24 @@ function generateUniSearch(riasec) {
       </div>
     </div>
   `;
+}
+
+function exportResults() {
+  const resultsEl = document.getElementById('results');
+  const styleEl = document.querySelector('style');
+  const clone = resultsEl.cloneNode(true);
+  clone.querySelectorAll('.results-actions').forEach(el => el.remove());
+  const html = `<!DOCTYPE html>
+<html lang="uk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Мої результати — Тест профорієнтації</title>
+<style>${styleEl.textContent}</style></head>
+<body><div class="container">${clone.innerHTML}</div></body></html>`;
+  const blob = new Blob([html], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'мої-результати.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 
 function restart() {
